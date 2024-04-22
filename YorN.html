@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yes or No Message</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: white;
+    }
+    
+    .message-box {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .message {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    
+    .yes-button,
+    .no-button {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+    
+    .yes-button {
+      background-color: green;
+      color: white;
+    }
+    
+    .no-button {
+      background-color: red;
+      color: white;
+    }
+    
+    .expanded {
+      width: 250px;
+      height: 50px;
+    }
+    
+    .wobble {
+      animation: wobble 0.5s ease-in-out infinite;
+    }
+    
+    @keyframes wobble {
+      0% { transform: translateX(-5px); }
+      25% { transform: translateX(5px); }
+      50% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+      100% { transform: translateX(0px); }
+    }
+    
+    .no-button:hover {
+      transform: translate(calc(-10px + (Math.random() * 20px)), calc(-10px + (Math.random() * 20px)));
+      transition: transform 0.2s ease-in-out;
+      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Confetti animation */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 20px;
+      background: rgba(255, 215, 0, 0.8);
+      transform-origin: 50% 50%;
+      animation: confetti 1s ease-out infinite;
+    }
+
+    @keyframes confetti {
+      0% {
+        transform: translateY(0) rotateZ(0deg);
+      }
+      100% {
+        transform: translateY(100vh) rotateZ(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="message-box">
+    <p class="message">Do you like me?</p>
+    <div class="button-container">
+      <button class="yes-button">Yes</button>
+      <button class="no-button">No</button>
+    </div>
+    <p class="expanded-message" style="display: none;">Are you really sure?</p>
+  </div>
+
+  <script>
+    const yesButton = document.querySelector('.yes-button');
+    const noButton = document.querySelector('.no-button');
+    const expandedMessage = document.querySelector('.expanded-message');
+    const messageBox = document.querySelector('.message-box');
+    let clickCount = 0;
+
+    noButton.addEventListener('click', () => {
+      clickCount++;
+      if (clickCount === 3) {
+        noButton.style.position = 'absolute';
+      }
+      expandedMessage.style.display = clickCount > 0 ? 'block' : 'none';
+      yesButton.classList.toggle('expanded');
+    });
+
+    noButton.addEventListener('mouseover', () => {
+      if (clickCount === 3) {
+        const randomX = Math.floor(Math.random() * (window.innerWidth - noButton.offsetWidth));
+        const randomY = Math.floor(Math.random() * (window.innerHeight - noButton.offsetHeight));
+        noButton.style.left = `${randomX}px`;
+        noButton.style.top = `${randomY}px`;
+      }
+    });
+
+    yesButton.addEventListener('click', () => {
+      clickCount = 0;
+      yesButton.classList.remove('wobble', 'expanded');
+      expandedMessage.textContent = 'YAAAYYYYYYYYYYYYY'; // Display the message
+      expandedMessage.style.display = 'block'; // Display expanded message
+      messageBox.style.backgroundColor = 'pink'; // Change background color to pink
+
+      // Confetti animation
+      for (let i = 0; i < 100; i++) {
+        createConfetti();
+      }
+    });
+
+    function createConfetti() {
+      const confetti = document.createElement('div');
+      confetti.classList.add('confetti');
+      confetti.style.left = `${Math.random() * 100}vw`;
+      confetti.style.animationDelay = `${Math.random()}s`;
+      document.body.appendChild(confetti);
+
+      setTimeout(() => {
+        confetti.remove();
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
